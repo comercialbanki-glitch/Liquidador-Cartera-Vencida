@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidador · Compra de cartera de libranza</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1B3D;--navy2:#1B2A55;--bg:#F5F3EE;--a:#2F6BFF;--b:#FF8A3D;--gold:#F2B705;--green:#18A06B;--red:#D64545;--mut:#5B6478;--line:#E4E1D8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--navy)}
+.sg{font-family:'Space Grotesk',Inter,sans-serif}
+header{background:var(--navy);color:#F5F3EE;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+header h1{margin:0;font-size:26px}
+header p{margin:4px 0 0;color:#C9D3EE;font-size:14px}
+main{display:grid;grid-template-columns:380px 1fr;gap:22px;padding:22px 32px;max-width:1500px;margin:0 auto}
+@media(max-width:1050px){main{grid-template-columns:1fr;padding:14px}}
+.card{background:#fff;border-radius:22px;padding:22px}
+.panel{display:flex;flex-direction:column;gap:4px;align-self:start}
+.grp{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);margin:14px 0 4px}
+.grp:first-child{margin-top:0}
+.in{display:grid;grid-template-columns:1fr 130px;gap:4px 10px;align-items:center;padding:6px 0;border-bottom:1px solid #F0EDE6}
+.in label{font-weight:600;font-size:14px}
+.in input[type=number]{width:130px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;text-align:right;color:var(--navy)}
+.in input[type=range]{grid-column:1/3;width:100%;accent-color:var(--a)}
+.in small{grid-column:1/3;color:var(--mut);font-size:12px}
+.res{display:flex;flex-direction:column;gap:18px;min-width:0}
+/* tipo */
+.tipos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:800px){.tipos{grid-template-columns:1fr}}
+.tipo{border:3px solid var(--line);background:#fff;border-radius:18px;padding:16px;text-align:left;cursor:pointer;font-family:inherit;color:var(--navy);display:flex;flex-direction:column;gap:4px;transition:all .15s}
+.tipo b{font-size:17px}
+.tipo .p{font-family:'Space Grotesk',Inter,sans-serif;font-size:30px;font-weight:700}
+.tipo span{font-size:13px;color:var(--mut)}
+.tipo.on{border-color:var(--navy);background:#EEF2FF}
+.tipo.t1 .p{color:var(--red)}.tipo.t2 .p{color:var(--a)}.tipo.t3 .p{color:var(--green)}
+/* price bar */
+.price{background:var(--navy);color:#F5F3EE;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.ptop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.ptop b{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#C9D3EE}
+.ptop .big{font-family:'Space Grotesk',Inter,sans-serif;font-size:48px;font-weight:700;line-height:1;color:var(--gold)}
+.ptop .big small{font-size:18px;color:#C9D3EE;font-family:Inter,sans-serif;font-weight:600}
+.rng{width:100%;height:14px;-webkit-appearance:none;appearance:none;border-radius:999px;outline:none;cursor:pointer;background:linear-gradient(90deg,#18A06B,#F2B705,#D64545)}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:999px;background:#fff;border:4px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.rng::-moz-range-thumb{width:28px;height:28px;border-radius:999px;background:#fff;border:4px solid var(--gold)}
+.hint{font-size:14px;color:#FFD66B;min-height:18px}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border-radius:18px;padding:16px 18px}
+.kpi p{margin:0;color:var(--mut);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.kpi .v{font-family:'Space Grotesk',Inter,sans-serif;font-size:28px;font-weight:700;margin-top:6px;line-height:1.1}
+.kpi small{color:var(--mut);font-size:12px}
+.kpi.gold{background:var(--gold)}.kpi.gold p,.kpi.gold small{color:#4A3A00}
+.kpi.dark{background:var(--navy);color:#F5F3EE}.kpi.dark p,.kpi.dark small{color:#C9D3EE}
+/* multiple gauge */
+.gauge{background:#fff;border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.gauge h2{margin:0;font-size:20px}
+.track{position:relative;height:28px;border-radius:999px;background:#EDEAE2;overflow:hidden}
+.goal{position:absolute;top:0;bottom:0;background:rgba(24,160,107,.25);border-left:2px dashed var(--green);border-right:2px dashed var(--green)}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,var(--a),var(--navy));transition:width .35s}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);font-weight:700}
+.verdict{font-weight:800;font-size:15px}
+/* chart */
+.chart{background:#fff;border-radius:22px;padding:20px 22px}
+.chart h2{margin:0 0 6px;font-size:20px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mut);font-weight:700}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+/* split */
+.split{background:#fff;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.split h2{margin:0;font-size:20px}
+.pcts{display:flex;align-items:center;gap:14px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:700;font-size:28px}
+.pcts small{font-family:Inter,sans-serif;font-size:12px;color:var(--mut);font-weight:800;display:block}
+#negR{width:100%;height:14px;-webkit-appearance:none;appearance:none;border-radius:999px;cursor:pointer}
+#negR::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:999px;background:#fff;border:4px solid var(--navy);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+#negR::-moz-range-thumb{width:28px;height:28px;border-radius:999px;background:#fff;border:4px solid var(--navy)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;color:var(--navy)}
+.chips button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.w{border-radius:16px;padding:16px 18px}
+.w.a{background:#E8EEFF;border-top:8px solid var(--a)}.w.b{background:#FFF1E6;border-top:8px solid var(--b)}
+.w h3{margin:0 0 6px;font-size:18px}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:2px 0}
+.row.t{border-top:2px solid rgba(15,27,61,.12);margin-top:6px;padding-top:8px;font-size:16px}
+.row.t b{font-family:'Space Grotesk',Inter,sans-serif;font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:9px 4px;border-bottom:1px solid #F0EDE6}
+td.n{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+tr.tt td{font-weight:800;background:#FFF6D6}
+.note{font-size:12px;color:var(--mut);line-height:1.5}
+.cta{background:#fff;border:1px solid var(--line,#E4E1D8);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.cta h2{margin:0;font-size:20px}
+.cta .sub{margin:0;font-size:13px;color:var(--mut,#5B6478)}
+.cta .g{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cta label{display:block;font-size:12px;font-weight:700;color:var(--mut,#5B6478);margin-bottom:4px}
+.cta input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:9px 11px;border:1px solid #D9D5CA;border-radius:9px;background:#FBFAF7}
+.gx{display:grid;grid-template-columns:1fr 180px 34px;gap:8px;align-items:center;margin-bottom:8px}
+.gx button{border:0;background:#F3E3E3;color:#C23B3B;border-radius:8px;height:36px;font-weight:800;cursor:pointer}
+.addg{align-self:flex-start;border:1px dashed #2F6BFF;background:#EEF3FF;color:#2F6BFF;font-weight:700;border-radius:9px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px}
+.acc{width:100%;border-collapse:collapse;font-size:15px}
+.acc td{padding:9px 6px;border-bottom:1px solid #EDEAE2}
+.acc td.n{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.acc tr.rsl td{font-size:18px;font-weight:800;background:#FFF6D6;border-bottom:0}
+.linkbtn{border:0;background:none;color:#2F6BFF;font:inherit;font-size:12px;font-weight:700;cursor:pointer;padding:0;margin-top:4px}
+@media(max-width:700px){.cta .g{grid-template-columns:1fr}.gx{grid-template-columns:1fr 120px 34px}}
+.tabs{display:flex;gap:6px;padding:0 32px;background:var(--navy);max-width:none}
+.tabs button{border:0;background:transparent;color:#C9D3EE;font:inherit;font-weight:700;font-size:14px;padding:12px 18px;border-radius:12px 12px 0 0;cursor:pointer}
+.tabs button.on{background:#F5F3EE;color:var(--navy)}
+.view{display:none}.view.on{display:grid}
+.tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#EEF2FF;color:#2F6BFF}
+.recrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.15);padding-top:12px}
+.recrow b{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#C9D3EE}
+.recrow .rv{font-family:'Space Grotesk',Inter,sans-serif;font-size:34px;font-weight:700;color:#7FE0B4}
+.recrow input[type=range]{flex:1;min-width:200px;accent-color:#7FE0B4}
+.fun .f{display:grid;grid-template-columns:200px 1fr 70px;gap:10px;align-items:center;margin:8px 0;font-size:14px;font-weight:600}
+.fun .t{height:22px;background:#EDEAE2;border-radius:8px;overflow:hidden}
+.fun .t i{display:block;height:100%;border-radius:8px}
+.fun .n{text-align:right;font-weight:800}
+.prog{position:relative;height:34px;background:#EDEAE2;border-radius:999px;overflow:hidden;margin:8px 0 6px}
+.prog i{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.prog .mk{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--navy)}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Liquidador · Compra de cartera de libranza</h1>
+    <p>Pestaña 1: proyección para el inversionista · Pestaña 2: cartera que ya se está recaudando · cifras en pesos</p>
+  </div>
+</header>
+<nav class="tabs" id="tabs"><button data-v="proy" class="on">1 · Proyección para el inversionista</button><button data-v="real">2 · Cartera en recaudo hoy</button></nav>
+
+<main class="view on" id="v-proy">
+<aside class="card panel" id="inputs"></aside>
+
+<section class="res">
+  <div class="tipos" id="tipos">
+    <button class="tipo t1" data-t="mala"><b>Cartera de baja calidad</b><span class="p">2% – 4%</span><span>Compra en bloque, sin selección</span></button>
+    <button class="tipo t2" data-t="elegida"><b>Cartera seleccionable</b><span class="p">10%</span><span>Compras de hasta $1.000 M, crédito por crédito</span></button>
+    <button class="tipo t3 on" data-t="volumen"><b>Seleccionada por volumen</b><span class="p">7%</span><span>Mejor calidad, en compras superiores a $1.000 M</span></button>
+  </div>
+
+  <div class="price">
+    <div class="ptop">
+      <div><b>Precio de compra · mueva la barra</b><div class="big"><span id="pv">7</span>% <small>del valor de la cartera</small></div></div>
+      <div style="text-align:right"><b>Pagamos</b><div class="sg" style="font-size:30px;font-weight:700" id="pPay"></div><small style="color:#C9D3EE" id="pNom"></small></div>
+    </div>
+    <input type="range" class="rng" id="priceR" min="1" max="15" step="0.5" value="7" aria-label="Precio de compra en porcentaje">
+    <div class="hint" id="hint"></div>
+    <div class="recrow"><b>Recaudo esperado</b><span class="rv"><span id="rv">120</span>%</span><input type="range" id="recR" min="10" max="200" step="5" value="120" aria-label="Recaudo esperado en porcentaje"><small style="color:#C9D3EE;width:100%">Del valor de la cartera. Escenario objetivo con gestión tecnológica e IA; muévelo según la calidad de la cartera.</small></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><p>Inversión inicial</p><div class="v" id="kInv"></div><small id="kInvS"></small></div>
+    <div class="kpi"><p>Recaudo en 18 meses</p><div class="v" id="kRec"></div><small id="kRecS"></small></div>
+    <div class="kpi dark"><p>Utilidad bruta</p><div class="v" id="kUt"></div><small id="kUtS"></small></div>
+    <div class="kpi gold"><p>Veces lo pagado</p><div class="v" id="kMul"></div><small id="kMulS"></small></div>
+  </div>
+
+  <div class="cta" id="cuenta">
+    <h2>Cuenta del negocio · valores reales</h2>
+    <p class="sub">Escribe lo que realmente se pagó por la cartera y cada gasto a medida que ocurra. Los gastos son variables: agrega o quita líneas y la cuenta se resta sola.</p>
+    <div class="g">
+      <div><label for="c_compra">Valor pagado por la compra ($)</label><input id="c_compra" inputmode="numeric"><button class="linkbtn" id="c_compra_m">Usar el valor del modelo</button></div>
+      <div><label for="c_rec">Recaudo (estimado o real a la fecha) ($)</label><input id="c_rec" inputmode="numeric"><button class="linkbtn" id="c_rec_m">Usar el recaudo estimado</button></div>
+    </div>
+    <div>
+      <label>Gastos</label>
+      <div id="gastos"></div>
+      <button class="addg" id="addg">+ Agregar gasto</button>
+    </div>
+    <table class="acc" id="acc"></table>
+  </div>
+
+  <div class="gauge">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>¿Llegamos a la meta de 12 a 17 veces lo pagado?</h2><span class="verdict" id="verdict"></span></div>
+    <div class="track"><div class="goal" id="goal"></div><div class="fill" id="fill"></div></div>
+    <div class="scale"><span>0x</span><span>5x</span><span>10x</span><span>15x</span><span>20x</span><span>25x</span></div>
+  </div>
+
+  <div class="chart">
+    <h2>Caja acumulada mes a mes</h2>
+    <div class="legend"><span><i style="background:var(--a)"></i>Caja acumulada (después de costos)</span><span><i style="background:var(--gold)"></i>Mes en que se recupera la inversión</span></div>
+    <svg id="chart" viewBox="0 0 900 300" role="img" aria-label="Caja acumulada mes a mes"></svg>
+  </div>
+
+  <div class="split">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2>Reparto de la utilidad · mueva la barra</h2>
+      <div class="pcts"><span style="color:var(--a)"><small>Socio A</small><span id="pA">50</span>%</span><span style="color:var(--mut)">·</span><span style="color:#D9691F"><small>Socio B</small><span id="pB">50</span>%</span></div>
+    </div>
+    <input type="range" id="negR" min="0" max="100" step="1" value="50" aria-label="Porcentaje para el socio A">
+    <div class="chips" id="chips"><button data-a="50">50 / 50</button><button data-a="60">60 / 40</button><button data-a="70">70 / 30</button><button data-a="40">40 / 60</button><button data-a="30">30 / 70</button></div>
+    <div class="who">
+      <div class="w a"><h3>Socio A</h3><div id="wA"></div></div>
+      <div class="w b"><h3>Socio B</h3><div id="wB"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin:0 0 8px;font-size:20px">Detalle del negocio</h2>
+    <table id="det"></table>
+    <p class="note" style="margin-top:10px">Supuestos editables a la izquierda. Los porcentajes de recaudo son la expectativa del negocio, no un dato del mercado: ajústelos según la calidad real de la cartera que se compre. El recaudo empieza cuando el embargo o descuento queda activo y se reparte en partes iguales hasta el mes 18.</p>
+  </div>
+</section>
+</main>
+
+<main class="view" id="v-real">
+<aside class="card panel" id="inputs2"></aside>
+<section class="res">
+  <div class="card" style="display:flex;flex-direction:column;gap:6px">
+    <span class="tag">Caso real · cartera de cooperativa en cobro judicial · corte sept. 2026</span>
+    <h2 style="margin:6px 0 0;font-size:22px">Cómo va la recuperación de una cartera que ya se está cobrando</h2>
+    <p class="note" style="font-size:13px">Datos base del informe de la cartera. Quien compró la cartera reemplaza los valores a la izquierda con sus datos reales; el valor total y el % pagado son supuestos editables.</p>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><p>Pagado por la cartera</p><div class="v" id="rPag"></div><small id="rPagS"></small></div>
+    <div class="kpi dark"><p>Recuperado a la fecha</p><div class="v" id="rRec"></div><small id="rRecS"></small></div>
+    <div class="kpi gold"><p>Recuperable con lo ganado</p><div class="v" id="rPot"></div><small id="rPotS"></small></div>
+    <div class="kpi"><p>Flujo mensual por embargos</p><div class="v" id="rFlu"></div><small id="rFluS"></small></div>
+  </div>
+  <div class="gauge">
+    <h2>Recuperación frente a lo pagado</h2>
+    <div class="prog" id="rProg"></div>
+    <div class="legend"><span><i style="background:#14845A"></i>Recuperado</span><span><i style="background:#F2B705"></i>Por cobrar en liquidaciones aprobadas</span><span><i style="background:#0F1B3D;width:3px"></i>Lo pagado</span></div>
+    <p class="note" id="rProgT" style="font-size:14px;color:var(--navy);font-weight:600"></p>
+  </div>
+  <div class="card fun">
+    <h2 style="margin:0 0 6px;font-size:20px">Avance de los procesos</h2>
+    <div id="rFun"></div>
+  </div>
+  <div class="card">
+    <h2 style="margin:0 0 8px;font-size:20px">Detalle</h2>
+    <table id="rDet"></table>
+    <p class="note" style="margin-top:10px">Esta pestaña muestra lo que la cartera ya recauda con gestión judicial tradicional. La pestaña 1 es el escenario objetivo para el inversionista, con un sistema tecnológico e IA que acelera la recuperación.</p>
+  </div>
+</section>
+</main>
+
+<script>
+const PRESET={mala:{price:3,rec:40},elegida:{price:10,rec:120},volumen:{price:7,rec:120}};
+const F=[
+ {g:'La cartera'},
+ {k:'nom',l:'Valor de la cartera a comprar (millones)',v:10000,min:50,max:50000,st:50},
+ {k:'rec',l:'Recaudo esperado (% del valor de la cartera)',v:120,min:10,max:200,st:5,s:'Ej.: 120% = por cada $100 de cartera se recogen $120 (capital + intereses de mora + costas)'},
+ {k:'obl',l:'Número de obligaciones (créditos)',v:400,min:1,max:5000,st:1},
+ {g:'Tiempos'},
+ {k:'meses',l:'Plazo del negocio (meses)',v:18,min:6,max:36,st:1},
+ {k:'ini',l:'Mes en que empieza a entrar el embargo',v:4,min:1,max:12,st:1,s:'Demanda, mandamiento de pago y oficio a la pagaduría'},
+ {g:'Costos'},
+ {k:'jur',l:'Honorarios jurídicos (% del recaudo)',v:15,min:0,max:40,st:1},
+ {k:'cob',l:'Gestión de cobranza (% del recaudo)',v:5,min:0,max:30,st:1},
+ {k:'gpo',l:'Gastos por proceso al iniciar ($ por obligación)',v:300000,min:0,max:3000000,st:50000,s:'Poderes, notificaciones, oficios de embargo'},
+ {k:'fijo',l:'Gastos mensuales de operación ($)',v:10000000,min:0,max:60000000,st:1000000},
+];
+const S={price:7,pA:50};F.forEach(f=>{if(f.k)S[f.k]=f.v});
+let tipo='volumen';
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-CO');
+const fm=n=>{const a=Math.abs(n),s=n<0?'−':'';if(a>=1e6)return s+'$'+(a/1e6).toLocaleString('es-CO',{maximumFractionDigits:1})+' M';return s+fmt(a)};
+const num=(n,d=0)=>n.toLocaleString('es-CO',{maximumFractionDigits:d});
+
+const P=document.getElementById('inputs');
+F.forEach(f=>{
+ if(f.g){P.insertAdjacentHTML('beforeend',`<div class="grp">${f.g}</div>`);return}
+ P.insertAdjacentHTML('beforeend',`<div class="in"><label for="n_${f.k}">${f.l}</label><input type="number" id="n_${f.k}" min="${f.min}" max="${f.max}" step="${f.st}" value="${f.v}"><input type="range" id="r_${f.k}" min="${f.min}" max="${f.max}" step="${f.st}" value="${f.v}" aria-label="${f.l}">${f.s?`<small>${f.s}</small>`:''}</div>`);
+});
+F.forEach(f=>{if(!f.k)return;const n=document.getElementById('n_'+f.k),r=document.getElementById('r_'+f.k);
+ n.oninput=()=>{S[f.k]=parseFloat(n.value)||0;r.value=n.value;calc()};
+ r.oninput=()=>{S[f.k]=parseFloat(r.value);n.value=r.value;calc()};});
+function setV(k,v){S[k]=v;const n=document.getElementById('n_'+k);if(n){n.value=v;document.getElementById('r_'+k).value=v}}
+function setPrice(v){S.price=v;document.getElementById('priceR').value=v}
+
+document.querySelectorAll('.tipo').forEach(b=>b.onclick=()=>{
+ tipo=b.dataset.t;document.querySelectorAll('.tipo').forEach(x=>x.classList.toggle('on',x===b));
+ setPrice(PRESET[tipo].price);
+ if(tipo==='volumen'&&S.nom<1000)setV('nom',1000);
+ calc();
+});
+document.getElementById('priceR').oninput=e=>{S.price=parseFloat(e.target.value);calc()};
+document.getElementById('negR').oninput=e=>{S.pA=parseFloat(e.target.value);calc()};
+document.querySelectorAll('#chips button').forEach(b=>b.onclick=()=>{S.pA=+b.dataset.a;calc()});
+
+function calc(){
+ const nom=S.nom*1e6, price=S.price/100, n=Math.max(S.meses,1), m0=Math.min(S.ini,n);
+ const compra=nom*price, gIni=S.obl*S.gpo, inv=compra+gIni;
+ const rec=nom*S.rec/100;
+ const varC=rec*(S.jur+S.cob)/100, fijo=S.fijo*n;
+ const cost=varC+fijo+gIni;
+ const net=rec-varC-fijo-compra-gIni;     // utilidad neta
+ const mulB=compra?rec/compra:0;           // veces bruto sobre precio pagado
+ const mulN=inv?(rec-varC-fijo)/inv:0;     // veces neto sobre inversión inicial
+ // monthly cash
+ const meses=n-m0+1, pm=rec/meses; let cum=-inv, pts=[cum], pay=null, peak=-inv;
+ for(let m=1;m<=n;m++){const r=m>=m0?pm:0;cum+=r-r*(S.jur+S.cob)/100-S.fijo;pts.push(cum);if(pay===null&&cum>=0)pay=m;peak=Math.min(peak,cum)}
+ // price block
+ document.getElementById('pv').textContent=num(S.price,1);
+ document.getElementById('rv').textContent=num(S.rec);document.getElementById('recR').value=S.rec;
+ document.getElementById('pPay').textContent=fm(compra);
+ document.getElementById('pNom').textContent='por una cartera de '+fm(nom);
+ const h=document.getElementById('hint');
+ h.textContent = (tipo==='volumen'&&nom<1000000000)?'Para el precio de 7% la compra debe superar $1.000 M.':
+   (tipo==='elegida'&&nom>1000000000)?'El 10% aplica a compras de hasta $1.000 M; por encima se negocia el 7%.':'';
+ // kpis
+ document.getElementById('kInv').textContent=fm(inv);
+ document.getElementById('kInvS').textContent='Compra '+fm(compra)+' + gastos iniciales '+fm(gIni)+' · '+fm(S.fijo)+' al mes hasta el primer recaudo';
+ document.getElementById('kRec').textContent=fm(rec);
+ document.getElementById('kRecS').textContent=num(S.rec)+'% de la cartera · '+fm(pm)+' al mes desde el mes '+m0;
+ document.getElementById('kUt').textContent=fm(rec-compra);
+ document.getElementById('kUtS').textContent='Recaudo − precio de compra · neta: '+fm(net)+(pay?' · recupera la inversión en el mes '+pay:'');
+ document.getElementById('kMul').textContent=num(mulB,1)+'x';
+ document.getElementById('kMulS').textContent='Recaudo ÷ precio pagado · neto de todos los costos: '+num(mulN,1)+'x';
+ // gauge (max 25x)
+ const mx=25;document.getElementById('goal').style.left=(12/mx*100)+'%';document.getElementById('goal').style.width=((17-12)/mx*100)+'%';
+ document.getElementById('fill').style.width=Math.max(0,Math.min(mulB,mx))/mx*100+'%';
+ const v=document.getElementById('verdict');
+ if(mulB>=17){v.textContent='Por encima de la meta: '+num(mulB,1)+'x';v.style.color='var(--green)'}
+ else if(mulB>=12){v.textContent='Dentro de la meta: '+num(mulB,1)+'x';v.style.color='var(--green)'}
+ else{v.textContent='Por debajo de la meta: '+num(mulB,1)+'x';v.style.color='var(--red)'}
+ // chart
+ drawChart(pts,pay);
+ // split
+ const a=S.pA/100, ua=net*a, ub=net*(1-a);
+ document.getElementById('pA').textContent=num(S.pA);document.getElementById('pB').textContent=num(100-S.pA);
+ const r=document.getElementById('negR');r.value=S.pA;r.style.background='linear-gradient(90deg,var(--a) '+S.pA+'%,var(--b) '+S.pA+'%)';
+ document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',+b.dataset.a===S.pA));
+ const row=(l,x,t)=>`<div class="row${t?' t':''}"><span>${l}</span><b>${x}</b></div>`;
+ document.getElementById('wA').innerHTML=row('Utilidad × '+num(S.pA)+'%',fm(ua))+row('Al mes (promedio)',fm(ua/n))+row('Utilidad en '+n+' meses',fm(ua),1);
+ document.getElementById('wB').innerHTML=row('Utilidad × '+num(100-S.pA)+'%',fm(ub))+row('Al mes (promedio)',fm(ub/n))+row('Utilidad en '+n+' meses',fm(ub),1);
+ // detail
+ const d=[['Valor de la cartera comprada',fm(nom)],['Precio de compra ('+num(S.price,1)+'%)',fm(compra)],['Gastos iniciales ('+num(S.obl)+' procesos)',fm(gIni)],['Inversión inicial',fm(inv),1],
+  ['Recaudo esperado ('+num(S.rec)+'%)',fm(rec)],['Honorarios y cobranza ('+num(S.jur+S.cob)+'%)','− '+fm(varC)],['Operación ('+n+' meses)','− '+fm(fijo)],['Utilidad neta',fm(net),1],
+  ['Rentabilidad sobre la inversión',num(inv?net/inv*100:0,0)+'%'],['Peor momento de caja',fm(peak)]];
+ document.getElementById('det').innerHTML=d.map(x=>`<tr class="${x[2]?'tt':''}"><td>${x[0]}</td><td class="n">${x[1]}</td></tr>`).join('');
+ if(typeof calcCuenta==='function') calcCuenta();
+}
+/* ---- cuenta real ---- */
+const parseM=v=>Number(String(v).replace(/[^\d]/g,''))||0;
+const fmtIn=el=>{const v=parseM(el.value);el.value=v?v.toLocaleString('es-CO'):''};
+let C={compra:null,rec:null,gastos:[{c:'Gastos de operación',v:0}]};
+function modelVals(){const nom=S.nom*1e6;return{compra:nom*S.price/100,rec:nom*S.rec/100}}
+function renderGastos(){
+ const box=document.getElementById('gastos');
+ box.innerHTML=C.gastos.map((g,i)=>`<div class="gx"><input data-gc="${i}" value="${g.c.replace(/"/g,'&quot;')}" placeholder="Concepto (ej. honorarios, notificaciones)"><input data-gv="${i}" inputmode="numeric" value="${g.v?g.v.toLocaleString('es-CO'):''}" placeholder="$ 0"><button data-gd="${i}" aria-label="Quitar gasto">×</button></div>`).join('');
+}
+function calcCuenta(){
+ const m=modelVals();
+ const ci=document.getElementById('c_compra'), ri=document.getElementById('c_rec');
+ if(C.compra===null && document.activeElement!==ci) ci.value=Math.round(m.compra).toLocaleString('es-CO');
+ if(C.rec===null && document.activeElement!==ri) ri.value=Math.round(m.rec).toLocaleString('es-CO');
+ const compra=C.compra===null?m.compra:C.compra, rec=C.rec===null?m.rec:C.rec;
+ const tg=C.gastos.reduce((a,g)=>a+(g.v||0),0), res=rec-compra-tg;
+ const rows=[['Recaudo'+(C.rec===null?' estimado':''),fm(rec)],['(−) Valor pagado por la compra','− '+fm(compra)]]
+   .concat(C.gastos.filter(g=>g.v).map(g=>['(−) '+(g.c||'Gasto'),'− '+fm(g.v)]));
+ rows.push(['Total gastos','− '+fm(tg)]);
+ document.getElementById('acc').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td></tr>`).join('')+
+  `<tr class="rsl"><td>Resultado</td><td class="n" style="color:${res<0?'#C23B3B':'#14845A'}">${fm(res)}</td></tr>`+
+  `<tr><td>Veces lo pagado (recaudo ÷ compra + gastos)</td><td class="n">${(compra+tg)?num(rec/(compra+tg),1)+'x':'—'}</td></tr>`;
+}
+document.getElementById('c_compra').oninput=e=>{fmtIn(e.target);C.compra=parseM(e.target.value);calcCuenta()};
+document.getElementById('c_rec').oninput=e=>{fmtIn(e.target);C.rec=parseM(e.target.value);calcCuenta()};
+document.getElementById('c_compra_m').onclick=()=>{C.compra=null;calcCuenta()};
+document.getElementById('c_rec_m').onclick=()=>{C.rec=null;calcCuenta()};
+document.getElementById('addg').onclick=()=>{C.gastos.push({c:'',v:0});renderGastos();calcCuenta();const l=document.querySelectorAll('[data-gc]');l[l.length-1].focus()};
+document.getElementById('gastos').addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.gc!==undefined)C.gastos[t.dataset.gc].c=t.value;
+ if(t.dataset.gv!==undefined){fmtIn(t);C.gastos[t.dataset.gv].v=parseM(t.value)}
+ calcCuenta()});
+document.getElementById('gastos').addEventListener('click',e=>{const b=e.target.closest('[data-gd]');if(!b)return;C.gastos.splice(+b.dataset.gd,1);if(!C.gastos.length)C.gastos.push({c:'',v:0});renderGastos();calcCuenta()});
+renderGastos();
+
+function drawChart(pts,pay){
+ const W=900,H=300,L=80,R=20,T=20,B=40,n=pts.length-1;
+ const mx=Math.max(...pts,0),mn=Math.min(...pts,0),rg=(mx-mn)||1;
+ const x=i=>L+(W-L-R)*i/n,y=v=>T+(H-T-B)*(mx-v)/rg;
+ let s='';
+ const ticks=4;for(let t=0;t<=ticks;t++){const v=mn+rg*t/ticks;s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#EDEAE2"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="#5B6478">${fm(v)}</text>`}
+ s+=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="#0F1B3D" stroke-width="1.5"/>`;
+ for(let i=0;i<=n;i+=Math.max(1,Math.round(n/9)))s+=`<text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="12" fill="#5B6478">Mes ${i}</text>`;
+ const d=pts.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+ s+=`<path d="${d} L${x(n)},${y(0)} L${x(0)},${y(0)} Z" fill="rgba(47,107,255,.12)"/>`;
+ s+=`<path d="${d}" fill="none" stroke="#2F6BFF" stroke-width="3.5" stroke-linejoin="round"/>`;
+ if(pay!==null){s+=`<line x1="${x(pay)}" x2="${x(pay)}" y1="${T}" y2="${H-B}" stroke="#F2B705" stroke-width="3" stroke-dasharray="6 5"/><text x="${x(pay)+6}" y="${T+14}" font-size="13" font-weight="700" fill="#8A6A00">Recupera inversión · mes ${pay}</text>`}
+ s+=`<circle cx="${x(n)}" cy="${y(pts[n])}" r="6" fill="#2F6BFF"/><text x="${x(n)-8}" y="${y(pts[n])+(y(pts[n])<T+30?24:-12)}" text-anchor="end" font-size="14" font-weight="800" fill="#0F1B3D">${fm(pts[n])}</text>`;
+ document.getElementById('chart').innerHTML=s;
+}
+document.getElementById('recR').oninput=e=>{setV('rec',parseFloat(e.target.value));calc()};
+/* ---- pestañas ---- */
+function showV(v){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));try{if(location.hash!=='#'+v)location.hash=v}catch(_){} }
+document.getElementById('tabs').onclick=e=>{const b=e.target.closest('button');if(b)showV(b.dataset.v)};
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h==='proy'||h==='real')showV(h)});
+/* ---- cartera en recaudo ---- */
+const F2=[
+ {g:'La cartera'},
+ {k:'nom',l:'Valor total de la cartera (millones)',v:2904,min:100,max:20000,st:1,s:'Estimado: 106 procesos × liquidación promedio de $27,4 M. Reemplazar por el valor real.'},
+ {k:'pct',l:'% pagado por la compra',v:10,min:1,max:30,st:0.5},
+ {g:'Recaudo'},
+ {k:'rec',l:'Recaudado a la fecha (millones)',v:130.2,min:0,max:5000,st:0.1,s:'Títulos judiciales ya entregados'},
+ {k:'pc',l:'Por cobrar en liquidaciones aprobadas (millones)',v:548.7,min:0,max:10000,st:0.1},
+ {k:'meses',l:'Meses desde la compra',v:25,min:1,max:60,st:1},
+ {g:'Procesos'},
+ {k:'pro',l:'Procesos radicados',v:106,min:1,max:5000,st:1},
+ {k:'gan',l:'Demandas ganadas',v:40,min:0,max:5000,st:1},
+ {k:'emb',l:'Embargados con descuento activo',v:22,min:0,max:5000,st:1},
+ {k:'crec',l:'Procesos con recaudo efectivo',v:20,min:0,max:5000,st:1},
+ {k:'desc',l:'Descuento mensual promedio por embargo ($)',v:456000,min:0,max:5000000,st:1000,s:'Promedio de los procesos que reportan el valor del descuento'},
+];
+const R={};F2.forEach(f=>{if(f.k)R[f.k]=f.v});
+const P2=document.getElementById('inputs2');
+F2.forEach(f=>{
+ if(f.g){P2.insertAdjacentHTML('beforeend',`<div class="grp">${f.g}</div>`);return}
+ P2.insertAdjacentHTML('beforeend',`<div class="in"><label for="m_${f.k}">${f.l}</label><input type="number" id="m_${f.k}" min="${f.min}" max="${f.max}" step="${f.st}" value="${f.v}">${f.s?`<small>${f.s}</small>`:''}</div>`);
+ document.getElementById('m_'+f.k).oninput=e=>{R[f.k]=parseFloat(e.target.value)||0;calcReal()};
+});
+function calcReal(){
+ const nom=R.nom*1e6, pag=nom*R.pct/100, rec=R.rec*1e6, pc=R.pc*1e6, pot=rec+pc, flu=R.emb*R.desc;
+ const falta=Math.max(0,pag-rec), mrec=flu?Math.ceil(falta/flu):null, prom=rec/Math.max(1,R.meses);
+ const set=(id,t)=>document.getElementById(id).textContent=t;
+ set('rPag',fm(pag)); set('rPagS',num(R.pct,1)+'% de una cartera de '+fm(nom));
+ set('rRec',fm(rec)); set('rRecS',(pag?num(rec/pag*100,0):0)+'% de lo pagado · '+fm(prom)+' al mes en promedio');
+ set('rPot',fm(pot)); set('rPotS',(pag?num(pot/pag,1):0)+'x lo pagado (recaudado + por cobrar)');
+ set('rFlu',fm(flu)); set('rFluS',num(R.emb)+' embargos × '+fm(R.desc)+' al mes');
+ const mx=Math.max(pot,pag)*1.08||1;
+ document.getElementById('rProg').innerHTML=`<i style="width:${pot/mx*100}%;background:#F2B705"></i><i style="width:${rec/mx*100}%;background:#14845A"></i><span class="mk" style="left:${pag/mx*100}%"></span>`;
+ set('rProgT', rec>=pag ? 'Ya se recuperó lo pagado: '+num(rec/pag,1)+' veces.' :
+   ('Falta '+fm(falta)+' para recuperar lo pagado'+(mrec!==null?': unos '+mrec+' meses al ritmo actual de los embargos.':'.') + (pot>=pag?' Con lo ya ganado en liquidaciones se cubre y se supera.':'')));
+ const st=[['Procesos radicados',R.pro,'#0F1B3D'],['Demandas ganadas',R.gan,'#2F6BFF'],['Embargados con descuento',R.emb,'#F2B705'],['Con recaudo efectivo',R.crec,'#14845A']];
+ document.getElementById('rFun').innerHTML=st.map(x=>`<div class="f"><span>${x[0]}</span><div class="t"><i style="width:${R.pro?x[1]/R.pro*100:0}%;background:${x[2]}"></i></div><span class="n">${num(x[1])}</span></div>`).join('');
+ const d=[['Valor total de la cartera',fm(nom)],['Pagado por la compra ('+num(R.pct,1)+'%)',fm(pag),1],['Recaudado a la fecha',fm(rec)],['Por cobrar en liquidaciones aprobadas',fm(pc)],['Total recuperable',fm(pot),1],
+  ['Veces lo pagado: hoy',(pag?num(rec/pag,2):0)+'x'],['Veces lo pagado: con lo ganado',(pag?num(pot/pag,2):0)+'x'],['Flujo mensual por embargos',fm(flu)],['Recaudo promedio mensual desde la compra',fm(prom)]];
+ document.getElementById('rDet').innerHTML=d.map(x=>`<tr class="${x[2]?'tt':''}"><td>${x[0]}</td><td class="n">${x[1]}</td></tr>`).join('');
+}
+calcReal();
+calc();
+{const h=location.hash.slice(1);if(h==='real')showV('real')}
+</script>
+</body>
+</html>
